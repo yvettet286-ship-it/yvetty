@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Record | ArchaeoVault</title>
+
+    <!-- Link to CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <header>
+        <h1>ArchaeoVault</h1>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="add-record.html">Add Record</a>
+            <a href="#">Records</a>
+            <a href="#">News</a>
+            <a href="#">About</a>
+        </nav>
+        <a href="#" onclick="logout()">Logout</a>
+        <nav>
+    <a href="index.html">Home</a>
+    <a href="add-record.html">Add Record</a>
+    <a href="records.html">Records</a>
+    <a href="#" onclick="logout()">Logout</a>
+</nav>
+    </header>
+
+    <!-- Add Record Form -->
+    <section class="content">
+        <h2>Add Archaeological Record</h2>
+
+        <form class="record-form">
+            
+            <label>Artifact Name</label>
+            <input type="text" placeholder="e.g. Ancient Pottery" required>
+
+            <label>Location Found</label>
+            <input type="text" placeholder="e.g. Egypt, Nile Valley" required>
+
+            <label>Estimated Time Period</label>
+            <input type="text" placeholder="e.g. 2000 BC" required>
+
+            <label>Description</label>
+            <textarea placeholder="Describe the artifact and its possible use" required></textarea>
+
+            <label>Upload Image</label>
+            <input type="file">
+
+            <button type="submit">Save Record</button>
+
+        </form>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>FIRST LEGO League Innovation Project | ArchaeoVault</p>
+    </footer>
+    <script src="script.js"></script>
+<script>
+    if (localStorage.getItem("loggedIn") !== "true") {
+        window.location.href = "login.html";
+    }
+</script>
+<p>Logged in as: <strong id="user"></strong></p>
+<script>
+    document.getElementById("user").textContent =
+        localStorage.getItem("currentUser");
+</script>
+<script src="script.js"></script>
+
+<script>
+    if (localStorage.getItem("loggedIn") !== "true") {
+        window.location.href = "login.html";
+    }
+</script>
+</body>
+</html>

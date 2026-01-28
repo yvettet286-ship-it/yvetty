@@ -1,0 +1,139 @@
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f4f1ec;
+    color: #333;
+}
+
+header {
+    background-color: #3b3a30;
+    color: white;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    margin-left: 20px;
+    font-weight: bold;
+}
+
+.hero {
+    padding: 60px 30px;
+    text-align: center;
+    background-color: #d8cfc4;
+}
+
+.hero h2 {
+    font-size: 32px;
+}
+
+.hero button {
+    padding: 12px 20px;
+    margin: 10px;
+    border: none;
+    background-color: #3b3a30;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.hero .secondary {
+    background-color: #6b705c;
+}
+
+.content {
+    padding: 40px 30px;
+    max-width: 800px;
+    margin: auto;
+}
+
+footer {
+    background-color: #3b3a30;
+    color: white;
+    text-align: center;
+    padding: 15px;
+}
+.record-form {
+    max-width: 500px;
+    margin: auto;
+    background-color: #ffffff;
+    padding: 25px;
+    border-radius: 8px;
+}
+
+.record-form label {
+    display: block;
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+.record-form input,
+.record-form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.record-form textarea {
+    height: 100px;
+}
+
+.record-form button {
+    margin-top: 20px;
+    width: 100%;
+    padding: 12px;
+    background-color: #3b3a30;
+    color: white;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+}
+.record-card {
+    background: white;
+    padding: 20px;
+    margin: 15px 0;
+    border-radius: 8px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+header, footer {
+    text-align: center;
+    padding: 10px;
+}
+
+nav a {
+    display: inline-block;
+    margin: 5px 10px;
+    text-decoration: none;
+    color: #333;
+}
+@media (max-width: 600px) {
+    nav a {
+        display: block;
+        margin: 5px 0;
+    }
+}
+.content {
+    padding: 20px;
+}
+
+/* Make forms responsive */
+.record-form {
+    max-width: 500px;
+    width: 90%; /* shrink for mobile */
+    margin: auto;
+}
+
+
+
