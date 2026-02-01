@@ -1,89 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Record | ArchaeoVault</title>
-
-    <!-- Link to CSS -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <nav>
-    <a href="home.html">Home</a> |
-    <a href="about.html">About</a> |
-    <a href="news.html">News</a> |
-    <a href="record.html">Record</a> |
-    <a href="add-record.html">Add Record</a>
+<nav class="navbar">
+    <div class="logo">ArchaeoVault</div>
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="add-record.html">Add Record</a>
+        <a href="records.html">Records</a>
+        <a href="news.html">News</a>
+        <a href="about.html">About</a>
+    </div>
 </nav>
-<hr>
+<div id="loginBox">
+  <h2>Login to Add Record</h2>
+  <input type="text" id="username" placeholder="Username"><br><br>
+  <input type="password" id="password" placeholder="Password"><br><br>
+  <button onclick="login()">Login</button>
+</div>
+<div id="recordSection" style="display:none;">
+  <h2>Add Archaeological Record</h2>
 
-    <!-- Navigation Bar -->
-    <header>
-        <h1>ArchaeoVault</h1>
-        <nav>
-            <a href="index.html">Home</a>
-            <a href="add-record.html">Add Record</a>
-            <a href="#">Records</a>
-            <a href="#">News</a>
-            <a href="#">About</a>
-        </nav>
-        <a href="#" onclick="logout()">Logout</a>
-        <nav>
-    <a href="index.html">Home</a>
-    <a href="add-record.html">Add Record</a>
-    <a href="records.html">Records</a>
-    <a href="#" onclick="logout()">Logout</a>
-</nav>
-    </header>
+  <label>Archaeologist Name:</label><br>
+  <input type="text" id="archName"><br><br>
 
-    <!-- Add Record Form -->
-    <section class="content">
-        <h2>Add Archaeological Record</h2>
+  <label>Artifact Name:</label><br>
+  <input type="text" id="artifact"><br><br>
 
-        <form class="record-form">
-            
-            <label>Artifact Name</label>
-            <input type="text" placeholder="e.g. Ancient Pottery" required>
+  <label>Location:</label><br>
+  <input type="text" id="location"><br><br>
 
-            <label>Location Found</label>
-            <input type="text" placeholder="e.g. Egypt, Nile Valley" required>
+  <label>Description:</label><br>
+  <textarea id="description"></textarea><br><br>
 
-            <label>Estimated Time Period</label>
-            <input type="text" placeholder="e.g. 2000 BC" required>
+  <label>Upload Photo:</label><br>
+  <input type="file" id="photo" accept="image/*"><br><br>
 
-            <label>Description</label>
-            <textarea placeholder="Describe the artifact and its possible use" required></textarea>
-
-            <label>Upload Image</label>
-            <input type="file">
-
-            <button type="submit">Save Record</button>
-
-        </form>
-    </section>
-
-    <!-- Footer -->
-    <footer>
-        <p>FIRST LEGO League Innovation Project | ArchaeoVault</p>
-    </footer>
-    <script src="script.js"></script>
+  <button onclick="saveRecord()">Save Record</button>
+</div>
+<h2 style="text-align:center;">Archaeologist Access</h2>
+<div id="loginSection"></div>
 <script>
-    if (localStorage.getItem("loggedIn") !== "true") {
-        window.location.href = "login.html";
-    }
-</script>
-<p>Logged in as: <strong id="user"></strong></p>
-<script>
-    document.getElementById("user").textContent =
-        localStorage.getItem("currentUser");
-</script>
-<script src="script.js"></script>
+let users = {
+  arch1: "1234",
+  arch2: "abcd"
+};
 
-<script>
-    if (localStorage.getItem("loggedIn") !== "true") {
-        window.location.href = "login.html";
-    }
+function login(){
+  let u = document.getElementById("username").value;
+  let p = document.getElementById("password").value;
+
+  if(users[u] && users[u] === p){
+    localStorage.setItem("currentUser", u);
+    document.getElementById("loginSection").style.display = "none";
+    document.getElementById("recordSection").style.display = "block";
+  } else {
+    alert("Invalid username or password");
+  }
+}
+
+function saveRecord(){
+  let records = JSON.parse(localStorage.getItem("records")) || [];
+
+  let photoFile = document.getElementById("photo").files[0];
+  let reader = new FileReader();
+
+  reader.onload = function(){
+    records.push({
+      user: localStorage.getItem("currentUser"),
+      archaeologist: document.getElementById("archName").value,
+      artifact: document.getElementById("artifact").value,
+      location: document.getElementById("location").value,
+      description: document.getElementById("description").value,
+      photo: reader.result
+    });
+
+    localStorage.setItem("records", JSON.stringify(records));
+    alert("Record saved successfully!");
+  };
+
+  if(photoFile){
+    reader.readAsDataURL(photoFile);
+  } else {
+    reader.onload();
+  }
+}
 </script>
 </body>
 </html>

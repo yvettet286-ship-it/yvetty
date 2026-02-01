@@ -1,38 +1,48 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta charset="UTF-8">
     <title>Records | ArchaeoVault</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<nav>
-    <a href="home.html">Home</a> |
-    <a href="about.html">About</a> |
-    <a href="news.html">News</a> |
-    <a href="record.html">Record</a> |
-    <a href="add-record.html">Add Record</a>
-</nav>
-<hr>
-<header>
-    <h1>ArchaeoVault</h1>
-    <nav>
+
+<nav class="navbar">
+    <div class="logo">ArchaeoVault</div>
+    <div class="nav-links">
         <a href="index.html">Home</a>
+        <a href="add-record.html">Add Record</a>
         <a href="records.html">Records</a>
-        <a href="login.html">Archaeologist Login</a>
-    </nav>
-</header>
+        <a href="news.html">News</a>
+        <a href="about.html">About</a>
+    </div>
+</nav>
 
-<section class="content">
-    <h2>Archaeological Records</h2>
-    <div id="recordsList"></div>
-</section>
+<h2>Saved Archaeological Records</h2>
 
-<footer>
-    <p>FIRST LEGO League Innovation Project | Digital Heritage Archive</p>
-</footer>
+<div id="recordsList"></div>
 
-<script src="script.js"></script>
+<script>
+let records = JSON.parse(localStorage.getItem("records")) || [];
+let container = document.getElementById("recordsList");
+
+if(records.length === 0){
+    container.innerHTML = "<p>No records saved yet.</p>";
+}
+
+records.forEach((r, index) => {
+    container.innerHTML += `
+        <div class="record-card" style="border:1px solid #ccc; padding:10px; margin:10px;">
+            <h3>${r.name}</h3>
+            <p><strong>Archaeologist:</strong> ${r.archaeologist}</p>
+            <p><strong>Location:</strong> ${r.location}</p>
+            <p>${r.description}</p>
+            ${r.photo ? `<img src="${r.photo}" width="200">` : ""}
+            ${r.video ? `<video src="${r.video}" controls width="250"></video>` : ""}
+        </div>
+    `;
+});
+</script>
+
 </body>
 </html>
