@@ -1,48 +1,60 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Records | ArchaeoVault</title>
+    <meta charset="UTF-8">
+    <title>Records Database - Unearthed</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <header>
+        <h1>UNEARTHED DATABASE</h1>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="records.html">View Records</a>
+            <a href="add-record.html">Add Record (Staff Only)</a>
+            <a href="ai-chat.html">AI Chat</a>
+        </nav>
+    </header>
 
-<nav class="navbar">
-    <div class="logo">ArchaeoVault</div>
-    <div class="nav-links">
-        <a href="index.html">Home</a>
-        <a href="Add-record.html">Add Record</a>
-        <a href="Records.html">Records</a>
-        <a href="News.html">News</a>
-        <a href="about.html">About</a>
+    <div class="explore-container">
+        <h2>Discovery Records</h2>
+        <div id="recordsList">
+            </div>
     </div>
-</nav>
 
-<h2>Saved Archaeological Records</h2>
+    <script>
+        const recordsList = document.getElementById('recordsList');
+        const records = JSON.parse(localStorage.getItem('archRecords') || '[]');
+        const currentUser = localStorage.getItem('currentUser');
 
-<div id="recordsList"></div>
+        if (records.length === 0) {
+            recordsList.innerHTML = "<p style='text-align:center;'>No records found in the database.</p>";
+        } else {
+            records.forEach((rec) => {
+                const card = document.createElement('div');
+                card.className = 'record-card';
+                
+                // Read-only view for everyone
+                card.innerHTML = `
+                    <h3>${rec.artifact}</h3>
+                    <p><strong>Found By:</strong> ${rec.arch}</p>
+                    <p><strong>Location:</strong> ${rec.loc}</p>
+                    <p><strong>Period:</strong> ${rec.time}</p>
+                    <p>${rec.desc}</p>
+                    ${rec.video ? `<p><a href="${rec.video}" target="_blank" style="color:#2ecc71;">Watch Discovery Video</a></p>` : ''}
+                `;
 
-<script>
-let records = JSON.parse(localStorage.getItem("records")) || [];
-let container = document.getElementById("recordsList");
+                // If logged in, they can "Write" (Edit placeholder)
+                if (currentUser) {
+                    const editBtn = document.createElement('button');
+                    editBtn.innerText = "Edit Record";
+                    editBtn.onclick = () => alert("Edit mode enabled for " + currentUser);
+                    card.appendChild(editBtn);
+                }
 
-if(records.length === 0){
-    container.innerHTML = "<p>No records saved yet.</p>";
-}
-
-records.forEach((r, index) => {
-    container.innerHTML += `
-        <div class="record-card" style="border:1px solid #ccc; padding:10px; margin:10px;">
-            <h3>${r.name}</h3>
-            <p><strong>Archaeologist:</strong> ${r.archaeologist}</p>
-            <p><strong>Location:</strong> ${r.location}</p>
-            <p>${r.description}</p>
-            ${r.photo ? `<img src="${r.photo}" width="200">` : ""}
-            ${r.video ? `<video src="${r.video}" controls width="250"></video>` : ""}
-        </div>
-    `;
-});
-</script>
-
+                recordsList.appendChild(card);
+            });
+        }
+    </script>
 </body>
 </html>

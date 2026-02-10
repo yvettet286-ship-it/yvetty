@@ -3,31 +3,26 @@ const archaeologists = [
     { username: "john", password: "abcd" },
     { username: "kelia", password: "fll" }
 ];
+
 function login(event) {
     event.preventDefault();
 
-    const username = document.getElementById("username").value;
-    const password = document.getElementById("password").value;
+    const user = document.getElementById("username").value;
+    const pass = document.getElementById("password").value;
 
     const validUser = archaeologists.find(
-        user => user.username === username && user.password === password
+        a => a.username === user && a.password === pass
     );
 
     if (validUser) {
         localStorage.setItem("loggedIn", "true");
-        localStorage.setItem("currentUser", username);
         window.location.href = "add-record.html";
     } else {
-        alert("Access denied. Authorized archaeologists only.");
+        alert("Access denied");
     }
 }
 
-// 3️⃣ LOGOUT FUNCTION
-function logout() {
-    localStorage.removeItem("loggedIn");
-    localStorage.removeItem("currentUser");
-    window.location.href = "login.html";
-}
+function logout() { localStorage.removeItem("loggedIn"); window.location.href = "login.html"; // redirect back to login page }
 
 // 4️⃣ SAVE RECORD
 function saveRecord(event) {

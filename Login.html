@@ -1,39 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Login</title>
+    <meta charset="UTF-8">
+    <title>Archaeologist Login | ArchaeoVault</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h2>Archaeologist Login</h2>
+<header>
+    <h1>ArchaeoVault</h1>
+</header>
 
-<form onsubmit="login(event)">
-  <input type="text" id="username" placeholder="Username" required><br><br>
-  <input type="password" id="password" placeholder="Password" required><br><br>
-  <button type="submit">Login</button>
-</form>
+<section class="content">
+    <h2>Archaeologist Login</h2>
 
-<script>
-const users = {
-  arch1: { password: "1234", name: "Dr. Alice Kamali" },
-  arch2: { password: "5678", name: "Dr. Jean Uwimana" }
-};
+    <form class="record-form" onsubmit="login(event)">
+        <label>Username</label>
+        <input type="text" id="username" required>
 
-function login(e){
-  e.preventDefault(); // Stop page from reloading
+        <label>Password</label>
+        <input type="password" id="password" required>
 
-  let username = document.getElementById("username").value.trim();
-  let password = document.getElementById("password").value.trim();
+        <button type="submit">Login</button>
+    </form>
+</section>
 
-  if(users[username] && users[username].password === password){
-    localStorage.setItem("currentUser", username);
-    alert("Login successful");
-    window.location.href = "add-record.html";
-  } else {
-    alert("Invalid username or password");
-  }
-}
-</script>
-
+<script src="script.js"></script>
 </body>
 </html>

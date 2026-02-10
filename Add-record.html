@@ -1,95 +1,125 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Record | ArchaeoVault</title>
+    <meta charset="UTF-8">
+    <title>Add Record - Unearthed</title>
     <link rel="stylesheet" href="style.css">
+   <style>
+    /* This targets EVERY input and textarea in the form */
+    .form-container input, 
+    .form-container textarea {
+        background-color: white !important; /* Forces background to white */
+        color: #2b1b0f !important;           /* Dark brown text for readability */
+        border: 2px solid #c9a14a !important; /* Gold border to match your theme */
+        box-sizing: border-box !important;   /* Keeps boxes inside the frame */
+        width: 100% !important;
+    }
+
+    /* Keeps the form from getting too wide or breaking the layout */
+    .form-container {
+        max-width: 480px; 
+        margin: 30px auto;
+        padding: 25px;
+        overflow: hidden; 
+    }
+</style>
 </head>
 <body>
-<nav class="navbar">
-    <div class="logo">ArchaeoVault</div>
-    <div class="nav-links">
+    <nav>
         <a href="index.html">Home</a>
-        <a href="Add-record.html">Add Record</a>
-        <a href="Records.html">Records</a>
-        <a href="News.html">News</a>
-        <a href="about.html">About</a>
+        <a href="records.html">View Records</a>
+        <a href="add-record.html">Add Record</a>
+        <a href="ai-chat.html">AI Chat</a>
+    </nav>
+
+    <div id="loginSection" class="form-container">
+        <h2>Archaeologist Login</h2>
+        <form id="loginForm">
+            <label>Username</label>
+            <input type="text" id="username" placeholder="Enter your ID" required>
+            <label>Password</label>
+            <input type="password" id="password" placeholder="Enter Password" required>
+            <button type="submit">Verify Credentials</button>
+        </form>
+        <p id="loginError" style="color: #ff4d4d; text-align: center;"></p>
     </div>
-</nav>
-<div id="loginBox">
-  <h2>Login to Add Record</h2>
-  <input type="text" id="username" placeholder="Username"><br><br>
-  <input type="password" id="password" placeholder="Password"><br><br>
-  <button onclick="login()">Login</button>
-</div>
-<div id="recordSection" style="display:none;">
-  <h2>Add Archaeological Record</h2>
 
-  <label>Archaeologist Name:</label><br>
-  <input type="text" id="archName"><br><br>
+    <div id="addingForm" class="form-container" style="display: none;">
+        <h2>Submit New Discovery</h2>
+        <form id="artifactForm">
+            <label>Archaeologist Name</label>
+            <input type="text" id="archName" required>
+            
+            <label>Artifact Name</label>
+            <input type="text" id="artName" required>
+            
+            <label>Location Found</label>
+            <input type="text" id="location" required>
+            
+            <label>Estimated Time Period</label>
+            <input type="text" id="timePeriod" placeholder="e.g. 500 BC">
+            
+            <label>Description</label>
+            <textarea id="description" required></textarea>
+            
+            <label>Upload Photo</label>
+            <input type="file" id="photo" accept="image/*">
+            
+            <label>Discovery Journey Video (Link)</label>
+            <input type="text" id="video" placeholder="Paste video URL">
+            
+            <button type="submit">Save Record to Database</button>
+        </form>
+    </div>
 
-  <label>Artifact Name:</label><br>
-  <input type="text" id="artifact"><br><br>
+    <script>
+        // Multi-user Login Logic
+        const users = [
+            {user: "archaeo1", pass: "dig2026"},
+            {user: "team_alpha", pass: "fllunearther"},
+            {user: "prof_jones", pass: "artifact123"}
+        ];
 
-  <label>Location:</label><br>
-  <input type="text" id="location"><br><br>
+        const loginForm = document.getElementById('loginForm');
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const u = document.getElementById('username').value;
+            const p = document.getElementById('password').value;
 
-  <label>Description:</label><br>
-  <textarea id="description"></textarea><br><br>
+            const validUser = users.find(user => user.user === u && user.pass === p);
 
-  <label>Upload Photo:</label><br>
-  <input type="file" id="photo" accept="image/*"><br><br>
+            if (validUser) {
+                document.getElementById('loginSection').style.display = 'none';
+                document.getElementById('addingForm').style.display = 'block';
+                // Store the name to remember who is logged in
+                localStorage.setItem('currentUser', u); 
+            } else {
+                document.getElementById('loginError').innerText = "Invalid Archaeologist Credentials!";
+            }
+        });
 
-  <button onclick="saveRecord()">Save Record</button>
-</div>
-<h2 style="text-align:center;">Archaeologist Access</h2>
-<div id="loginSection"></div>
-<script>
-let users = {
-  arch1: "1234",
-  arch2: "abcd"
-};
+        // Saving Record Logic
+        const artifactForm = document.getElementById('artifactForm');
+        artifactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const newRecord = {
+                arch: document.getElementById('archName').value,
+                artifact: document.getElementById('artName').value,
+                loc: document.getElementById('location').value,
+                time: document.getElementById('timePeriod').value,
+                desc: document.getElementById('description').value,
+                video: document.getElementById('video').value
+            };
 
-function login(){
-  let u = document.getElementById("username").value;
-  let p = document.getElementById("password").value;
+            // Get existing records or start new array
+            const records = JSON.parse(localStorage.getItem('archRecords') || '[]');
+            records.push(newRecord);
+            localStorage.setItem('archRecords', JSON.stringify(records));
 
-  if(users[u] && users[u] === p){
-    localStorage.setItem("currentUser", u);
-    document.getElementById("loginSection").style.display = "none";
-    document.getElementById("recordSection").style.display = "block";
-  } else {
-    alert("Invalid username or password");
-  }
-}
-
-function saveRecord(){
-  let records = JSON.parse(localStorage.getItem("records")) || [];
-
-  let photoFile = document.getElementById("photo").files[0];
-  let reader = new FileReader();
-
-  reader.onload = function(){
-    records.push({
-      user: localStorage.getItem("currentUser"),
-      archaeologist: document.getElementById("archName").value,
-      artifact: document.getElementById("artifact").value,
-      location: document.getElementById("location").value,
-      description: document.getElementById("description").value,
-      photo: reader.result
-    });
-
-    localStorage.setItem("records", JSON.stringify(records));
-    alert("Record saved successfully!");
-  };
-
-  if(photoFile){
-    reader.readAsDataURL(photoFile);
-  } else {
-    reader.onload();
-  }
-}
-</script>
+            alert("Record Saved Successfully!");
+            window.location.href = "records.html";
+        });
+    </script>
 </body>
 </html>
