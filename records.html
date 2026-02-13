@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Records Database - Unearthed</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>UNEARTHED DATABASE</h1>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="records.html">View Records</a>
+            <a href="add-record.html">Add Record (Staff Only)</a>
+    <a href="news.html">News</a> 
+    <a href="about.html">About</a>
+    <a href="ai-chat.html">AI Chat</a>
+        </nav>
+    </header>
+
+    <div class="explore-container">
+        <h2>Discovery Records</h2>
+        <div id="recordsList">
+            </div>
+    </div>
+
+    <script>
+        const recordsList = document.getElementById('recordsList');
+        const records = JSON.parse(localStorage.getItem('archRecords') || '[]');
+        const currentUser = localStorage.getItem('currentUser');
+
+        if (records.length === 0) {
+            recordsList.innerHTML = "<p style='text-align:center;'>No records found in the database.</p>";
+        } else {
+            records.forEach((rec) => {
+                const card = document.createElement('div');
+                card.className = 'record-card';
+                
+                // Read-only view for everyone
+                card.innerHTML = `
+                    <h3>${rec.artifact}</h3>
+                    <p><strong>Found By:</strong> ${rec.arch}</p>
+                    <p><strong>Location:</strong> ${rec.loc}</p>
+                    <p><strong>Period:</strong> ${rec.time}</p>
+                    <p>${rec.desc}</p>
+                    ${rec.video ? `<p><a href="${rec.video}" target="_blank" style="color:#2ecc71;">Watch Discovery Video</a></p>` : ''}
+                `;
+
+                // If logged in, they can "Write" (Edit placeholder)
+                if (currentUser) {
+                    const editBtn = document.createElement('button');
+                    editBtn.innerText = "Edit Record";
+                    editBtn.onclick = () => alert("Edit mode enabled for " + currentUser);
+                    card.appendChild(editBtn);
+                }
+
+                recordsList.appendChild(card);
+            });
+        }
+    </script>
+    <style>
+    .comment-box {
+        margin-top: 15px;
+        padding: 10px;
+        background: rgba(255, 255, 255, 0.05);
+        border-left: 3px solid #ffd700;
+        border-radius: 5px;
+    }
+    .comment-input {
+        width: 70%;
+        padding: 5px;
+        background: white;
+        color: black;
+        border-radius: 4px;
+    }
+    .comment-btn {
+        background: #2ecc71 !important;
+        color: white !important;
+        padding: 5px 10px !important;
+        font-size: 12px !important;
+        margin-left: 5px !important;
+    }
+</style>
+
+<script>
+    function addComment(button, artifactName) {
+        const input = button.previousElementSibling;
+        const commentText = input.value;
+
+        if (commentText.trim() === "") {
+            alert("Please write something before posting!");
+            return;
+        }
+
+        // Create the comment element
+        const commentDiv = document.createElement('div');
+        commentDiv.className = 'comment-box';
+        commentDiv.innerHTML = `<small style="color: #ffd700;">Researcher Note:</small> <p style="margin: 5px 0;">${commentText}</p>`;
+
+        // Add it to the card
+        button.parentElement.appendChild(commentDiv);
+        
+        // Clear input
+        input.value = "";
+        
+        // Bonus: Save to localStorage so it stays there!
+        const comments = JSON.parse(localStorage.getItem('comments_' + artifactName) || '[]');
+        comments.push(commentText);
+        localStorage.setItem('comments_' + artifactName, JSON.stringify(comments));
+    }
+
+    // This part adds the "Add Comment" UI to every record card automatically
+    window.addEventListener('load', () => {
+        const cards = document.querySelectorAll('.record-card');
+        cards.forEach(card => {
+            const artName = card.querySelector('h3').innerText;
+            const container = document.createElement('div');
+            container.style.marginTop = "20px";
+            container.innerHTML = `
+                <input type="text" class="comment-input" placeholder="Add a scientific observation...">
+                <button class="comment-btn" onclick="addComment(this, '${artName}')">Post</button>
+            `;
+            card.appendChild(container);
+
+            // Load existing comments from storage
+            const savedComments = JSON.parse(localStorage.getItem('comments_' + artName) || '[]');
+            savedComments.forEach(text => {
+                const commentDiv = document.createElement('div');
+                commentDiv.className = 'comment-box';
+                commentDiv.innerHTML = `<small style="color: #ffd700;">Researcher Note:</small> <p style="margin: 5px 0;">${text}</p>`;
+                card.appendChild(commentDiv);
+            });
+        });
+    });
+</script>
+</body>
+</html>
